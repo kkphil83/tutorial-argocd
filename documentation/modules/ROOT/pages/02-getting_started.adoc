@@ -2,7 +2,7 @@
 include::_attributes.adoc[]
 :profile: gitops
 
-Now that you've verified that Argo CD is up and running, let's explore how to access and manage Argo CD.
+Argo CD에 접근하여 관리하는 방법을 알아보겠습니다.
 
 [#connect_argocd]
 == Argo CD 웹 UI 접속
@@ -12,7 +12,7 @@ Project를 retail-%userid% 로 선택하면, argocd-server 경로로 들어갈 �
 
 [NOTE]
 ====
-환경 설명: 각 사용자 별로 retail-%userid% 프로젝트에 Argo CD 서버가 설치되어 있습니다. 이어서 샘플 애플리케이션을 argocd-%userid% 에 배포할 것입니다.
+환경 설명: retail-%userid% 프로젝트에 Argo CD 서버가 설치되어 있습니다. 이를 톻애 argocd-%userid% 프로젝트에 샘플 애플리케이션을 배포할 것입니다.
 ====
 
 image::argopad.png[ArgoCD]
@@ -121,8 +121,6 @@ image::app2.png[SampleApp]
 
 아래에 있는 YAML 형태의 Application CR을 붙여넣고 *SAVE* 버튼을 누릅니다. 
 
-.link:https://github.com/redhat-scholars/argocd-tutorial/blob/master/assets/bgd-app/bgd-app.yaml[bgd-app.yaml,window='_blank']
-[source,yaml,subs="+macros,attributes+"]
 ----
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -165,7 +163,7 @@ image::argocd-app2.png[SampleApp]
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 ----
-oc get all -n argocd-%userid*
+oc get all -n argocd-%userid%
 ----
 
 출력에는 서비스, 배포 및 Pod가 나열되어야 합니다.
@@ -201,40 +199,39 @@ image::bgdapp.png[BGD App]
 
 image::bgd.png[SampleApp]
 
-=== Addressing Configuration Drift
+=== 구성 드리프트 해결
 
-Let's introduce a change in the application environment! Patch the live Deployment manifest to change the color
-of the bubbles in the application from blue to green:
-
-[.console-input]
-[source,bash,subs="attributes+,+macros"]
-----
-kubectl -n bgd patch deploy/bgd --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/env/0/value", "value":"green"}]'
-----
-
-Wait for the rollout to happen:
+애플리케이션 환경에 변화를 도입해 보겠습니다! 
+실행 중인 Deployment 매니페스트를 패치하여 애플리케이션의 버블 색상을 파란색에서 녹색으로 변경합니다.
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 ----
-kubectl rollout status deploy/bgd -n bgd
+oc patch deploy/bgd -n argocd-%userid% --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/env/0/value", "value": "green"}]'
 ----
 
-Refresh the tab where your application is running. You should see green bubbles.
+롤아웃이 완료될 때까지 기다리세요.
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+oc rollout status deploy/bgd -n argocd-%userid%
+----
+
+애플리케이션이 실행 중인 탭을 새로 고칩니다. 녹색 거품이 보일 것입니다.
 
 image::bgd-green.png[BDG Green]
 
-Looking over at your Argo CD Web UI, you can see that Argo detects your
-application as "Out of Sync".
+Argo CD 웹 UI를 살펴보면 Argo가 응용 프로그램을 "Out of Sync"으로 감지한 것을 볼 수 있습니다.
 
 image::out-of-sync.png[Out of Sync]
 
-You can sync your app via the Argo CD by:
+Argo CD 웹 userid를 통해 앱을 동기화하는 방법은 다음과 같습니다
 
-* First clicking `SYNC`
-* Then clicking `SYNCHRONIZE`
+* 먼저 화면 상단의 `SYNC` 버튼 클릭
+* 그리고 `SYNCHRONIZE` 버튼 클릭
 
-Alternatively, you can run the following command:
+또는 wsl 환경에서 oc login 이후 다음 명령을 실행할 수도 있습니다.
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -242,16 +239,15 @@ Alternatively, you can run the following command:
 argocd app sync bgd-app
 ----
 
-After the sync process is done, the Argo CD UI should mark the application as in sync.
+동기화 프로세스가 완료되면 Argo CD UI에서 애플리케이션이 동기화되었다고 표시됩니다.
 
 image::fullysynced.png[Fully Synced]
 
-Reload the page on the tab where the application is running. The bubbles should have returned to their original blue color.
+애플리케이션이 실행 중인 탭에서 페이지를 다시 로드합니다. 원래대로 파란색 거품으로 돌아왔을 것입니다.
 
 image::bgd.png[BDG App]
 
-You can setup Argo CD to automatically correct drift by setting the
-`Application` manifest to do so. Example:
+`Application` 매니페스트를 설정하여 드리프트를 자동으로 수정하도록 Argo CD를 설정할 수 있습니다. 가장 아래쪽의 `selfHeal` 기능을 *true*로 변경하는 것입니다.
 
 [.console-input]
 [source,yaml,subs="attributes+,+macros"]
@@ -263,27 +259,9 @@ spec:
       selfHeal: true
 ----
 
-Or, as in our case, after the fact by running the following command:
+아래의 명령어를 통해 쉽게 변경할 수 있습니다.
 
-[tabs, subs="attributes+,+macros"]
-====
-Minikube::
-+
---
-[.console-input]
-[source,bash,subs="attributes+,+macros"]
 ----
-kubectl patch application/bgd-app -n argocd --type=merge -p='{"spec":{"syncPolicy":{"automated":{"prune":true,"selfHeal":true}}}}'
-----
---
-OpenShift::
-+
---
-[.console-input]
-[source,bash,subs="attributes+,+macros"]
-----
-kubectl patch application/bgd-app -n openshift-gitops --type=merge -p='{"spec":{"syncPolicy":{"automated":{"prune":true,"selfHeal":true}}}}'
-----
---
-====
+oc patch application/bgd-app -n retail-%userid% --type='json' -p='[{"op": "replace", "path": "/spec/syncPolicy/automated/selfHeal", "value": true}]'----
+
 
