@@ -2,34 +2,29 @@ runtime:
   cache_dir: ./.cache/antora
 
 site:
-  title: ArgoCD Tutorial
-  url: https://redhat-scholars.github.io/argocd-tutorial
-  start_page: argocd-tutorial::index.adoc
+  title: DevNation Workshop - ArgoCD
+  start_page: mad-dev-guides-m4::index.adoc
 
 content:
   sources:
-    - url: git@github.com:redhat-scholars/argocd-tutorial.git
-      tags: []
-      branches: ["master"]
+    - url: .
+      branches: main
       start_path: documentation
 
 asciidoc:
   attributes:
-    release-version: master
+    experimental: true
     page-pagination: true
+    openshift-password: openshift
   extensions:
-    - ./lib/tab-block.js
     - ./lib/remote-include-processor.js
+    - ./lib/tab-block.js
 
 ui:
   bundle:
-    url: https://github.com/redhat-developer-demos/rhd-tutorial-ui/releases/download/v0.1.10/ui-bundle.zip
+    url: https://github.com/danieloh30/course-ui/raw/main/ui-bundle-fix-rexp.zip
     snapshot: true
-  supplemental_files:
-    - path: ./supplemental-ui
-    - path: .nojekyll
-    - path: ui.yml
-      contents: "static_files: [ .nojekyll ]"
+  supplemental_files: ./supplemental-ui
 
 output:
   dir: ./gh-pages

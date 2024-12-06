@@ -1,7 +1,6 @@
-name: argocd-tutorial
-title: ArgoCD Tutorial
-version: master
+name: mad-dev-guides-m4
+title: Module 4 - ArgoCD
+version: main
 nav:
   - modules/ROOT/nav.adoc
-
 start_page: ROOT:index.adoc

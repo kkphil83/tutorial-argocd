@@ -1,6 +1,6 @@
 # Contributing Guide
 
-The sources of this tutorial docs is in https://github.com/redhat-scholars/argocd-tutorial/tree/master/documentation[documentation] folder.
+The sources of this tutorial docs is in https://github.com/redhat-scholars/openshift-starter-guides/tree/master/documentation[documentation] folder.
 The site generation is done by https://docs.antora.org/[Antora]
 
 ### Visual Studio Code Remote Development
@@ -10,7 +10,7 @@ If you are using link:https://code.visualstudio.com/[Visual Studio Code] with th
 Simply follow these instructions:
 
 1. (Only if running with podman) Set the environment variable `DEVCONTAINER_TARGET_PREFIX=podman`
-2. Open VS Code from the root of `argocd-tutorial` repository and when prompted indicate that you want to open the folder in a container.
+2. Open VS Code from the root of `openshift-starter-guides` repository and when prompted indicate that you want to open the folder in a container.
 
 Once the devcontainer is initialized, from the Visual Studio Code terminal run `npm run dev` to start the development site.  (Visual Studio Code should handle all the port forwarding into the devcontainer so that you can interact with the site from an VSCode assigned port on your localhost)
 
@@ -41,6 +41,6 @@ Making any changes to your local repositories above cloned earlier, will be auto
 
 Now you are all set:
 
-- Open an Issue in http://github.com/redhat-scholars/argocd-tutorial.git
+- Open an Issue in http://github.com/redhat-scholars/openshift-starter-guides.git
 - Prepare your changes in the respective documentation repository
 - Send the PR to respective repositories listed above
