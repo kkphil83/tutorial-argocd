@@ -1,4 +1,4 @@
-= 시작하기
+= Argo CD
 include::_attributes.adoc[]
 :profile: gitops
 
