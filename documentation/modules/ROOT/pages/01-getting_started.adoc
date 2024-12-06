@@ -21,7 +21,7 @@ image::argopad.png[ArgoCD]
 
 image::login1.png[ArgoCDLogin1, 600]
 
-아래의 *Allow selected permissions* 버튼을 눌러서 접속 권한을 허용합니다.
+아래의 `Allow selected permissions` 버튼을 눌러서 접속 권한을 허용합니다.
 
 image::login2.png[ArgoCDLogin2, 600]
 
@@ -74,7 +74,7 @@ include::ROOT:example$bgd-yaml/bgd-route.yaml[]
 === 애플리케이션 배포
 
 Argo CD로 관리되는 YAML 매니페스트들은 Argo CD가 알고 있습니다. 
-따라서 Argo CD가 클러스터에서 이러한 매니페스트를 적용/배포하도록 하려면  link:https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#applications[Application CR (CustomResource)^] 을 사용하여 이를 `Application`으로 정의해야 합니다.
+따라서 Argo CD가 클러스터에서 이러한 매니페스트를 적용/배포하도록 하려면  link:https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#applications[Application CR (CustomResource)^] 을 사용하여 이를 `Application` 으로 정의해야 합니다.
 
 이 애플리케이션을 배포하는 데 사용된 Argo CD 애플리케이션 매니페스트를 검토하고 간략하게 분석해보겠습니다.
 
@@ -104,22 +104,22 @@ spec:
 ----
 <1> 배포 대상 네임스페이스를 명시합니다.
 <2> 배포 대상 클러스터 환경은 Argo CD가 설치되어 있는 환경과 동일합니다.
-<3> 이것은 Argo CD 서버가 설치되어 있는 프로젝트를 `default`로 정의하는 기본 설정입니다.
+<3> 이것은 Argo CD 서버가 설치되어 있는 프로젝트를 `default` 로 정의하는 기본 설정입니다.
 [NOTE]
 Argo CD에서 인식하는 project라는 개념은 OpenShift의 project와 다릅니다.
 <4> 매니페스트 저장소와 YAML이 있는 Git 소스 저장소 경로입니다.
-<5> `automated` 하위 설정인 `syncPolicy`이 `false`로 지정되어 있습니다. Git 저장소에서 제거된 리소스는 자동으로 정리하지만, 수정된 리소스는 자동으로 수정하지 않습니다.
+<5> `automated` 하위 설정인 `syncPolicy` 가 `false` 로 지정되어 있습니다. Git 저장소에서 제거된 리소스는 자동으로 정리하지만, 수정된 리소스는 자동으로 수정하지 않습니다.
 
 
-애플리케이션을 배포하기 위해 *+ NEW APP* 버튼을 누릅니다.
+애플리케이션을 배포하기 위해 `+ NEW APP` 버튼을 누릅니다.
 
 image::app1.png[SampleApp]
 
-Application CR을 붙여넣기 하기 위해 *EDIT AS YAML* 버튼을 누릅니다.
+Application CR을 붙여넣기 하기 위해 `EDIT AS YAML` 버튼을 누릅니다.
 
 image::app2.png[SampleApp]
 
-아래에 있는 YAML 형태의 Application CR을 붙여넣고 *SAVE* 버튼을 누릅니다. 
+아래에 있는 YAML 형태의 Application CR을 붙여넣고 `SAVE` 버튼을 누릅니다. 
 
 ----
 apiVersion: argoproj.io/v1alpha1
@@ -146,7 +146,7 @@ spec:
 
 image::app4.png[SampleApp]
 
-그리고 화면 상단의 *CREATE* 버튼을 눌러서 애플리케이션을 배포합니다.
+그리고 화면 상단의 `CREATE` 버튼을 눌러서 애플리케이션을 배포합니다.
 
 image::app3.png[SampleApp]
 
@@ -191,7 +191,7 @@ oc rollout status deploy/bgd -n argocd-%userid%
 
 웹 브라우저에서 애플리케이션을 방문하세요.
 
-OpenShift 콘솔의 개발자 화면에서, *Topology* 메뉴로 들어가서 방금 동기화한 애플리케이션의 웹 주소로 들어갈 수 있습니다. (각자 계정의 argocd-* 프로젝트를 선택하세요!)
+OpenShift 콘솔의 개발자 화면에서, `Topology` 메뉴로 들어가서 방금 동기화한 애플리케이션의 웹 주소로 들어갈 수 있습니다. (각자 계정의 argocd-* 프로젝트를 선택하세요!)
 
 image::bgdapp.png[BGD App]
 
@@ -231,7 +231,7 @@ Argo CD 웹 UI를 통해 앱을 동기화하는 방법은 다음과 같습니다
 * 먼저 화면 상단의 `SYNC` 버튼 클릭
 * 그리고 `SYNCHRONIZE` 버튼 클릭
 
-또는 wsl 환경에서 oc login 이후 다음 명령을 실행할 수도 있습니다.
+또는 wsl 환경의 터미널 창에서 `oc login` 으로 로그인한 후 다음 명령을 실행할 수도 있습니다.
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]

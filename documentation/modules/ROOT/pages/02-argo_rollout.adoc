@@ -1,6 +1,6 @@
 = Argo Rollouts
 include::_attributes.adoc[]
-:profile: gitops
+
 
 Argo Rollouts는 OpenShift에 블루-그린, 카나리아 등의 애플리케이션 업데이트 전략을 쉽게 구현하는 기능을 제공합니다.
 이 실습에서는 카나리아 배포 전략에서 Argo Rollouts를 사용하여 트래픽을 점진적으로 라우팅하는 방법을 확인합니다. 
