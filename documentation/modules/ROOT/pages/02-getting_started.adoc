@@ -191,7 +191,7 @@ oc rollout status deploy/bgd -n argocd-%userid%
 
 웹 브라우저에서 애플리케이션을 방문하세요.
 
-OpenShift 콘솔의 개발자 화면에서, *Topology* 메뉴로 들어가서 방금 동기화한 애플리케이션의 웹 주소로 들어갈 수 있습니다.
+OpenShift 콘솔의 개발자 화면에서, *Topology* 메뉴로 들어가서 방금 동기화한 애플리케이션의 웹 주소로 들어갈 수 있습니다. (각자 계정의 argocd-* 프로젝트를 선택하세요!)
 
 image::bgdapp.png[BGD App]
 
@@ -222,11 +222,11 @@ oc rollout status deploy/bgd -n argocd-%userid%
 
 image::bgd-green.png[BDG Green]
 
-Argo CD 웹 UI를 살펴보면 Argo가 응용 프로그램을 "Out of Sync"으로 감지한 것을 볼 수 있습니다.
+Argo CD 웹 UI를 살펴보면 Argo가 응용 프로그램을 "Out of Sync"로 감지한 것을 볼 수 있습니다. 동기화가 깨진 상태입니다.
 
 image::out-of-sync.png[Out of Sync]
 
-Argo CD 웹 userid를 통해 앱을 동기화하는 방법은 다음과 같습니다
+Argo CD 웹 UI를 통해 앱을 동기화하는 방법은 다음과 같습니다
 
 * 먼저 화면 상단의 `SYNC` 버튼 클릭
 * 그리고 `SYNCHRONIZE` 버튼 클릭
@@ -243,11 +243,11 @@ argocd app sync bgd-app
 
 image::fullysynced.png[Fully Synced]
 
-애플리케이션이 실행 중인 탭에서 페이지를 다시 로드합니다. 원래대로 파란색 거품으로 돌아왔을 것입니다.
+애플리케이션이 실행 중인 탭에서 페이지를 새로 고침 합니다. 원래대로 파란색 거품으로 돌아왔을 것입니다.
 
 image::bgd.png[BDG App]
 
-`Application` 매니페스트를 설정하여 드리프트를 자동으로 수정하도록 Argo CD를 설정할 수 있습니다. 가장 아래쪽의 `selfHeal` 기능을 *true*로 변경하는 것입니다.
+`Application` 매니페스트를 수정하여 구성 드리프트를 자동으로 고치도록 구성할 수 있습니다. 가장 아래쪽의 `selfHeal` 기능을 true로 변경하는 것입니다.
 
 [.console-input]
 [source,yaml,subs="attributes+,+macros"]
@@ -262,6 +262,7 @@ spec:
 아래의 명령어를 통해 쉽게 변경할 수 있습니다.
 
 ----
-oc patch application/bgd-app -n retail-%userid% --type='json' -p='[{"op": "replace", "path": "/spec/syncPolicy/automated/selfHeal", "value": true}]'----
+oc patch application/bgd-app -n retail-%userid% --type='json' -p='[{"op": "replace", "path": "/spec/syncPolicy/automated/selfHeal", "value": true}]'
+----
 
 
