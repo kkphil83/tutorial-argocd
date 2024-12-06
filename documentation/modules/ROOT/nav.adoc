@@ -1,11 +1,6 @@
-* xref:01-setup.adoc[Setup]
-** xref:01-setup.adoc#prerequisite[Prerequisites]
-** xref:01-setup.adoc#kubernetes[Setup Kubernetes]
-** xref:01-setup.adoc#install_argocd[Install ArgoCD]
-
-* xref:02-getting_started.adoc[Getting Started]
-** xref:02-getting_started.adoc#connect_argocd[Connecting to ArgoCD]
-** xref:02-getting_started.adoc#deploy_sample_application[Deploy a Sample Application]
+* xref:02-getting_started.adoc[시작하기]
+** xref:02-getting_started.adoc#connect_argocd[Argo CD 웹 UI 접속]
+** xref:02-getting_started.adoc#deploy_sample_application[샘플 애플리케이션 배포]
 
 * xref:03-kustomize.adoc[Work with Kustomize]
 ** xref:03-kustomize.adoc#exploring_kustomize[Exploring the Kustomize]

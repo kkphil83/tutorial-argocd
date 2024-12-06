@@ -1,211 +1,83 @@
-= Getting Started
+= 시작하기
 include::_attributes.adoc[]
 :profile: gitops
 
 Now that you've verified that Argo CD is up and running, let's explore how to access and manage Argo CD.
 
 [#connect_argocd]
-== Connecting to Argo CD
+== Argo CD 웹 UI 접속
 
-Argo CD generates a default `admin` user, and a random password when first deployed. 
+OpenShift 웹 콘솔에서 Administrator 화면 > Networking > Routes 메뉴로 들어갑니다.
+Project를 retail-%userid% 로 선택하면, argocd-server 경로로 들어갈 수 있습니다.
 
-You can connect to Argo CD using this user account via the CLI or web console.
-
-=== Connecting with the CLI
-
-To login using the CLI you'll need to obtain the admin password and URL for the Argo CD instance:
-
-[tabs, subs="attributes+,+macros"]
+[NOTE]
 ====
-Minikube::
-+
---
-
-To get the Argo CD password execute:
-
-[.console-input]
-[source,bash,subs="attributes+,+macros"]
-----
-argoPass=$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)
-echo $argoPass
-----
-
-Get ArgoCD URL:
-
-[.console-input]
-[source,bash,subs="attributes+,+macros"]
-----
-argoURL=$(minikube -p gitops service argocd-server -n argocd --url -p gitops | tail -n 1 | sed -e 's|http://||')
-echo $argoURL
-----
-
---
-
-OpenShift::
-+
---
-
-Extract the password from the admin user Secret:
-
-[.console-input]
-[source,bash,subs="attributes+,+macros"]
-----
-argoPass=$(oc get secret/openshift-gitops-cluster -n openshift-gitops -o jsonpath='{.data.admin\.password}' | base64 -d)
-echo $argoPass
-----
-
-Get the Route for the Argo CD/OpenShift GitOps server:
-
-[.console-input]
-[source,bash,subs="attributes+,+macros"]
-----
-argoURL=$(oc get route openshift-gitops-server -n openshift-gitops -o jsonpath='{.spec.host}{"\n"}')
-echo $argoURL
-----
-
---
+환경 설명: 각 사용자 별로 retail-%userid% 프로젝트에 Argo CD 서버가 설치되어 있습니다. 이어서 샘플 애플리케이션을 argocd-%userid% 에 배포할 것입니다.
 ====
-
-Login to Argo CD with the `argocd` CLI using the URL and password:
-[.console-input]
-[source,bash,subs="attributes+,+macros"]
-----
-argocd login --insecure --grpc-web $argoURL  --username admin --password $argoPass
-----
-
-The following message will be printed upon successful login:
-
-[.console-output]
-[source,bash,subs="attributes+,+macros"]
-----
-'admin:login' logged in successfully
-----
-
-=== Connecting with the Web Console
-
-[tabs, subs="attributes+,+macros"]
-====
-Minikube::
-+
---
-Expose the ArgoCD console using the minikube service.
-
-[.console-input]
-[source,bash,subs="attributes+,+macros"]
-----
-minikube -p {profile} service argocd-server -n argocd
-----
---
-
-OpenShift::
-+
---
-In the OpenShift Web Console, expand the *Application Launcher* in the  top-right and click the *ArgoCD* icon:
 
 image::argopad.png[ArgoCD]
 
-Alternatively, get Argo CD Route using the `oc` CLI as previously done:
-[.console-input]
-[source,bash,subs="attributes+,+macros"]
-----
-oc get route openshift-gitops-server -n openshift-gitops -o jsonpath='{.spec.host}{"\n"}'
-----
---
-====
+`LOG IN VIA OPENSHIFT` 버튼을 누르면 현재 OpenShift 웹 콘솔에 로그인 되어 있는 계정으로 Argo CD 콘솔에 접속됩니다.
 
+image::login1.png[ArgoCDLogin1, 600]
 
-Access the Argo CD console by logging in with the username `admin` and the password extracted in the previous step:
+아래의 *Allow selected permissions* 버튼을 눌러서 접속 권한을 허용합니다.
 
-image::argocd-login.png[ArgoCDLogin, 600]
+image::login2.png[ArgoCDLogin2, 600]
 
-Once you've logged in, you should see the following page. This is the Argo CD Web UI.
+로그인하면 다음 페이지가 보일 것입니다. 이것은 Argo CD 웹 UI입니다.
 
-image::argocd-login2.png[ArgoCDLogin2, 600]
+image::login3.png[ArgoCDLogin3, 600]
+
 
 [#deploy_sample_application]
-== Deploy a Sample Application
+== 샘플 애플리케이션 배포
 
-We'll be using the https://github.com/redhat-developer-demos/openshift-gitops-examples[redhat-developer-demos/openshift-gitops-examples,window='_blank'] Git repository to deploy our first application. It contains the manifests that define the application state.
+우리는 첫 번째 애플리케이션을 배포하기 위해 https://github.com/kkphil83/openshift-gitops-examples[kkphil83/openshift-gitops-examples,window='_blank'] Git 저장소를 사용할 것입니다. 
+여기에는 애플리케이션 상태를 정의하는 매니페스트가 포함되어 있습니다
 
-=== Review the Application Manifests
+=== 애플리케이션 매니페스트 YAML 검토
 
-The application manifests include a Namespace, Deployment, and networking manifests for Minikube/OpenShift. Deploying these manifests to a cluster will result in an application that supports ingress.
+애플리케이션 매니페스트에는 OpenShift에 대한 Deployment 및 네트워킹 매니페스트가 포함됩니다. 
+이러한 매니페스트를 클러스터에 배포하면 Route를 지원하는 애플리케이션이 생성됩니다.
 
 [IMPORTANT]
 ====
-Review, but do not apply these manifests to your cluster. We will do that shortly using Argo CD.
+검토만 하고, 이 매니페스트를 클러스터에 적용하지 마세요. 우리는 곧 Argo CD를 사용하여 이를 배포할 것입니다.
 ====
 
-A *Namespace*:
+*Deployment*:
 
-.link:https://github.com/redhat-developer-demos/openshift-gitops-examples/blob/main/apps/bgd/overlays/bgd/bgd-ns.yaml[bgd-namespace.yaml,window='_blank']
-[source,yaml,subs="+macros,attributes+"]
-----
-include::ROOT:example$bgd-yaml/bgd-namespace.yaml[]
-----
-
-A *Deployment*:
-
-.link:https://github.com/redhat-developer-demos/openshift-gitops-examples/blob/main/apps/bgd/base/bgd-deployment.yaml[bgd-deployment.yaml,window='_blank']
+.link:https://github.com/kkphil83/openshift-gitops-examples/blob/main/apps/bgd/base/bgd-deployment.yaml[bgd-deployment.yaml,window='_blank']
 [source,yaml,subs="+macros,attributes+"]
 ----
 include::ROOT:example$bgd-yaml/bgd-deployment.yaml[]
 ----
 
-[tabs, subs="attributes+,+macros"]
-====
-Minikube::
-+
---
-A *Service* of type `NodePort`:
+`ClusterIP` 유형의 *Service*:
 
-.link:https://github.com/redhat-developer-demos/openshift-gitops-examples/blob/minikube/apps/bgd/base/bgd-svc.yaml[bgd-svc.yaml,window='_blank']
-[source,yaml,subs="+macros,attributes+"]
-----
-include::ROOT:example$minikube/bgd-yaml/bgd-svc.yaml[]
-----
-
-An *Ingress*:
-
-.link:https://github.com/redhat-developer-demos/openshift-gitops-examples/blob/minikube/apps/bgd/base/bgd-ingress.yaml[bgd-ingress.yaml,window='_blank']
-[source,yaml,subs="+macros,attributes+"]
-----
-include::ROOT:example$minikube/bgd-yaml/bgd-ingress.yaml[]
-----
---
-OpenShift::
-+
---
-A *Service* of type `ClusterIP`:
-
-.link:https://github.com/redhat-developer-demos/openshift-gitops-examples/blob/main/apps/bgd/base/bgd-svc.yaml[bgd-svc.yaml,window='_blank']
+.link:https://github.com/kkphil83/openshift-gitops-examples/blob/main/apps/bgd/base/bgd-svc.yaml[bgd-svc.yaml,window='_blank']
 [source,yaml,subs="+macros,attributes+"]
 ----
 include::ROOT:example$bgd-yaml/bgd-svc.yaml[]
 ----
 
-A *Route*:
+*Route*:
 
-.link:https://github.com/redhat-developer-demos/openshift-gitops-examples/blob/main/apps/bgd/base/bgd-route.yaml[bgd-route.yaml,window='_blank']
+.link:https://github.com/kkphil83/openshift-gitops-examples/blob/main/apps/bgd/base/bgd-route.yaml[bgd-route.yaml,window='_blank']
 [source,yaml,subs="+macros,attributes+"]
 ----
 include::ROOT:example$bgd-yaml/bgd-route.yaml[]
 ----
 
---
-====
 
-=== Deploy the Application
+=== 애플리케이션 배포
 
-A managed collection of manifests is known as an `Application` within Argo CD. Therefore, you must define it as such using an link:https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#applications[Application CR (CustomResource)^] in order to have Argo CD apply these manifests in your cluster.
+Argo CD로 관리되는 YAML 매니페스트들은 Argo CD가 알고 있습니다. 
+따라서 Argo CD가 클러스터에서 이러한 매니페스트를 적용/배포하도록 하려면  link:https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#applications[Application CR (CustomResource)^] 을 사용하여 이를 `Application`으로 정의해야 합니다.
 
-Let's review the https://github.com/redhat-scholars/argocd-tutorial/blob/master/assets/bgd-app/bgd-app.yaml[Argo CD Application manifest] used to deploy this application and break this down a bit:
+이 애플리케이션을 배포하는 데 사용된 Argo CD 애플리케이션 매니페스트를 검토하고 간략하게 분석해보겠습니다.
 
-[tabs, subs="attributes+,+macros"]
-====
-Minikube::
-+
---
 .link:https://github.com/redhat-scholars/argocd-tutorial/blob/master/assets/bgd-app/bgd-app.yaml[bgd-app.yaml,window='_blank']
 [source,yaml,subs="+macros,attributes+"]
 ----
@@ -213,101 +85,90 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: bgd-app
-  namespace: argocd
+  namespace: retail-%userid%
 spec:
   destination:
-    namespace: bgd
-    server: https://kubernetes.default.svc <1>
-  project: default <2>
-  source: <3>
+    namespace: argocd-%userid% <1>
+    server: 'https://kubernetes.default.svc' <2>
+  project: default <3>
+  source: <4>
     path: apps/bgd/overlays/bgd
-    repoURL: https://github.com/redhat-developer-demos/openshift-gitops-examples
-    targetRevision: minikube
-  syncPolicy: <4>
-    automated:
-      prune: true
-      selfHeal: false
-    syncOptions:
-    - CreateNamespace=true
-----
-<1> The destination server is the same server we installed Argo CD on.
-<2> Here you're installing the application in Argo CD's `default` project (`.spec.project`).
-<3> The manifest repo, and the path within it where the YAML resides.
-<4> The `syncPolicy` is set to `automated`. It will automatically prune resources resources that have been removed from the Git repo, but will not automatically correct resources that deviate from the definition stored in the repo, i.e manual changes use `kubectl` will not be "healed".
-
-
-Apply the Application CR by running the following command:
-
-[.console-input]
-[source,bash,subs="attributes+,+macros"]
-----
-kubectl apply -f documentation/modules/ROOT/examples/minikube/bgd-app/bgd-app.yaml
-----
---
-OpenShift::
-+
---
-.link:https://github.com/redhat-scholars/argocd-tutorial/blob/master/assets/bgd-app/bgd-app.yaml[bgd-app.yaml,window='_blank']
-[source,yaml,subs="+macros,attributes+"]
-----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: bgd-app
-  namespace: openshift-gitops
-spec:
-  destination:
-    namespace: bgd
-    server: https://kubernetes.default.svc <1>
-  project: default <2>
-  source: <3>
-    path: apps/bgd/overlays/bgd
-    repoURL: https://github.com/redhat-developer-demos/openshift-gitops-examples
+    repoURL: https://github.com/kkphil83/openshift-gitops-examples
     targetRevision: main
-  syncPolicy: <4>
+  syncPolicy: <5>
     automated:
       prune: true
       selfHeal: false
     syncOptions:
     - CreateNamespace=true
 ----
-<1> The destination server is the same server we installed Argo CD on.
-<2> Here you're installing the application in Argo CD's `default` project (`.spec.project`).
+<1> 배포 대상 네임스페이스를 명시합니다.
+<2> 배포 대상 클러스터 환경은 Argo CD가 설치되어 있는 환경과 동일합니다.
+<3> 이것은 Argo CD 서버가 설치되어 있는 프로젝트를 `default`로 정의하는 기본 설정입니다.
 [NOTE]
-Argo CD's concept of a `Project` is different than OpenShift's. Here you're installing the application in Argo CD's `default` project (`.spec.project`). *NOT* OpenShift's default project.
-<3> The manifest repo, and th path within it where the YAML resides.
-<4> The `syncPolicy` is set to `automated`. It will automatically prune resources resources that have been removed from the Git repo, but will not automatically correct resources that deviate from the definition stored in the repo, i.e manual changes made using `kubectl` will not be "healed".
+Argo CD에서 인식하는 project라는 개념은 OpenShift의 project와 다릅니다.
+<4> 매니페스트 저장소와 YAML이 있는 Git 소스 저장소 경로입니다.
+<5> `automated` 하위 설정인 `syncPolicy`이 `false`로 지정되어 있습니다. Git 저장소에서 제거된 리소스는 자동으로 정리하지만, 수정된 리소스는 자동으로 수정하지 않습니다.
 
-Apply the Application CR by running the following command:
 
-[.console-input]
-[source,bash,subs="attributes+,+macros"]
+애플리케이션을 배포하기 위해 *+ NEW APP* 버튼을 누릅니다.
+
+image::app1.png[SampleApp]
+
+Application CR을 붙여넣기 하기 위해 *EDIT AS YAML* 버튼을 누릅니다.
+
+image::app2.png[SampleApp]
+
+아래에 있는 YAML 형태의 Application CR을 붙여넣고 *SAVE* 버튼을 누릅니다. 
+
+.link:https://github.com/redhat-scholars/argocd-tutorial/blob/master/assets/bgd-app/bgd-app.yaml[bgd-app.yaml,window='_blank']
+[source,yaml,subs="+macros,attributes+"]
 ----
-kubectl apply -f documentation/modules/ROOT/examples/bgd-app/bgd-app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: bgd-app
+  namespace: retail-%userid%
+spec:
+  destination:
+    namespace: argocd-%userid%
+    server: 'https://kubernetes.default.svc'
+  project: default
+  source:
+    path: apps/bgd/overlays/bgd
+    repoURL: https://github.com/kkphil83/openshift-gitops-examples
+    targetRevision: main
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: false
+    syncOptions:
+    - CreateNamespace=true
 ----
---
-====
 
+image::app4.png[SampleApp]
 
-The newly created Application appears as a tile with the title `bgd-app` in the Argo CD UI.
+그리고 화면 상단의 *CREATE* 버튼을 눌러서 애플리케이션을 배포합니다.
 
-image::argocd-app1.png[SampleApp]
+image::app3.png[SampleApp]
 
-Clicking on this tile takes you to the application details page. You may see it as still progressing or fully synced.
+애플리케이션이 배포되었습니다.
+
+image::app5.png[SampleApp]
+
+애플리케이션 타일을 클릭하면 애플리케이션 세부 정보 페이지로 이동합니다. 아직 동기화 진행 중이거나, 완전히 동기화된 것으로 표시될 수 있습니다.
 
 image::argocd-app2.png[SampleApp]
 
-NOTE: You may have to click on `show hidden resources` on this page to see all of the resources.
-
-At this point the application should be up and running. Verify that the resources were created:
+이 시점에서 애플리케이션은 가동되고 실행 중이어야 합니다. 리소스가 생성되었는지 확인합니다.
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 ----
-kubectl get all -n bgd
+oc get all -n argocd-%userid*
 ----
 
-The output should list a Service, Deployment, and Pod:
+출력에는 서비스, 배포 및 Pod가 나열되어야 합니다.
 
 [.console-output]
 [source,bash,subs="attributes+,+macros"]
@@ -322,49 +183,21 @@ NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
 deployment.apps/bgd   1/1     1            1           10m
 ----
 
-Verify the the rollout is complete:
+롤아웃이 완료되었는지 확인하세요.
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 ----
-kubectl rollout status deploy/bgd -n bgd
+oc rollout status deploy/bgd -n argocd-%userid%
 ----
 
-Obtain the URL, and visit your application in a web browser:
+웹 브라우저에서 애플리케이션을 방문하세요.
 
-
-[tabs, subs="attributes+,+macros"]
-====
-Minikube::
-+
---
-Add Minikube IP (`minikube ip`) and the Ingress hostname `bgd.devnation` to your Host file, like `/etc/hosts`.
-
-Example:
-[source,bash,subs="attributes+,+macros"]
-----
-192.168.39.242 bgd.devnation
-----
-
---
-OpenShift::
-+
---
-From *Web Console*, select *bgd* project from drop-down menu, then click to the application's Route to access it.
+OpenShift 콘솔의 개발자 화면에서, *Topology* 메뉴로 들어가서 방금 동기화한 애플리케이션의 웹 주소로 들어갈 수 있습니다.
 
 image::bgdapp.png[BGD App]
 
-Alternatively, get app Route from CLI:
-
-[.console-input]
-[source,bash,subs="attributes+,+macros"]
-----
-oc get route bgd -n bgd -o jsonpath='{.spec.host}{"\n"}'
-----
---
-====
-
-Your application should look like this.
+귀하의 애플리케이션의 화면입니다. 파란색이 보입니다.
 
 image::bgd.png[SampleApp]
 

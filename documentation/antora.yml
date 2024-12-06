@@ -1,5 +1,5 @@
 name: mad-dev-guides-m4
-title: Module 4 - ArgoCD
+title: Module 4 - Argo CD
 version: main
 nav:
   - modules/ROOT/nav.adoc

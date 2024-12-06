@@ -1,29 +1,28 @@
-= Welcome to the Argo CD Tutorial
+= Argo CD 튜토리얼에 오신 것을 환영합니다.
 :page-layout: home
 :!sectids:
 
 [.text-center.strong]
 == Argo CD
 
-https://argoproj.github.io/argo-cd/[Argo CD,window='_blank'] is a declarative, GitOps continuous delivery tool for Kubernetes.
+https://argoproj.github.io/argo-cd/[Argo CD,window='_blank'] 는 Kubernetes를 위한 선언적이고 지속적인 GitOps 배포 도구입니다.
 
-It follows the **GitOps** pattern of using Git repositories as the source of truth for defining the desired application state.
+이것은 원하는 애플리케이션 상태를 정의하기 위한 소스 저장소로 Git 저장소를 사용하는 *GitOps* 패턴을 따릅니다.
 
-It automates the deployment of the desired application states in the specified target environments. Application deployments can track updates to branches, tags, or be pinned to a specific version of manifests at a Git commit.
+지정된 대상 환경에서 원하는 애플리케이션 상태의 배포를 자동화합니다. 애플리케이션 배포는 브랜치, 태그에 대한 업데이트를 추적하거나 Git 커밋에서 특정 버전의 매니페스트에 고정할 수 있습니다.
 
 image::argocd-sync-flow.png[Argo CD Sync Flow, 700]
 
 
 == GitOps
 
-https://www.openshift.com/learn/topics/gitops/[GitOps,window='_blank'] is a set of practices that leverages Git workflows to manage infrastructure and application configurations.
-By using Git repositories as the source of truth, it allows the DevOps team to store the entire state of the cluster configuration in Git so that the trail of changes are visible and auditable. 
+https://www.openshift.com/learn/topics/gitops/[GitOps,window='_blank']는 인프라 및 애플리케이션 구성을 관리하기 위해 Git 워크플로를 활용하는 일련의 방식입니다.
+Git 저장소를 소스로 사용함으로써 DevOps 팀은 Git에 클러스터 구성의 전체 상태를 저장하여 변경 사항의 흔적을 확인할 수 있고 감사를 수행할 수도 있습니다.
 
-**GitOps** simplifies the propagation of infrastructure and application 
-configuration changes across multiple clusters by defining your infrastructure and applications definitions as “code”.
+**GitOps** 는 인프라 및 애플리케이션 정의를 "코드"로 정의하여 여러 클러스터에 걸쳐 인프라 및 애플리케이션 구성 변경 사항을 전파하는 작업을 간소화합니다.
 
-* Ensure that the clusters have similar states for configuration, monitoring, or storage.
-* Recover or recreate clusters from a known state.
-* Create clusters with a known state.
-* Apply or revert configuration changes to multiple clusters.
-* Associate templated configuration with different environments.
+* 클러스터가 구성, 모니터링 또는 저장에 대해 명시된 내용과 유사한 상태를 유지하고 있는지 확인합니다.
+* 클러스터를 정의된 상태로 복구하거나 다시 만듭니다.
+* 클러스터를 만들 때, 정의한 상태로 만듭니다.
+* 여러 클러스터에 대해 구성의 변경 사항을 적용하거나 되돌립니다.
+* 템플릿화된 구성을 다양한 환경에 적용합니다.
