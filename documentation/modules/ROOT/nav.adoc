@@ -4,6 +4,12 @@
 
 * xref:02-argo_rollout.adoc[Argo Rollouts]
 ** xref:02-argo_rollout.adoc#rollouts_deploy[롤아웃 배포]
-** xref:02-argo_rollout#rollouts_update[롤아웃 업데이트]
-** xref:02-argo_rollout#rollouts_promote[롤아웃 프로모션]
-** xref:02-argo_rollout#rollouts_rollback[롤아웃 중단(롤백)]
+** xref:02-argo_rollout.adoc#rollouts_update[롤아웃 업데이트]
+** xref:02-argo_rollout.adoc#rollouts_promote[롤아웃 프로모션]
+** xref:02-argo_rollout.adoc#rollouts_rollback[롤아웃 중단(롤백)]
+
+* xref:03-rollout_extension.adoc[Rollout Extension]
+** xref:03-rollout_extension.adoc#re_deploy[롤아웃 애플리케이션 배포]
+** xref:03-rollout_extension.adoc#re_update[Deployment 업데이트]
+** xref:03-rollout_extension.adoc#re_promote[롤아웃 프로모션]
+** xref:03-rollout_extension.adoc#re_rollback[롤아웃 중단(롤백)]
