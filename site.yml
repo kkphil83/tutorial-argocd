@@ -3,7 +3,7 @@ runtime:
 
 site:
   title: DevNation Workshop - Argo CD
-  start_page: argocd-tutorial::index.adoc
+  start_page: mad-dev-guides-m4::index.adoc
 
 content:
   sources:
