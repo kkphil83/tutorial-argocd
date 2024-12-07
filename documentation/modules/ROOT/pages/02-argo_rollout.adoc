@@ -12,7 +12,7 @@ Argo Rollouts는 OpenShift에 블루-그린, 카나리아 등의 애플리케이
 
 다음 예제 절차는 rollouts-demo 롤아웃과 서비스를 만듭니다. 
 
-그런 다음 롤아웃은 트래픽의 20%를 애플리케이션의 신규 버전인 카나리아 버전으로 라우팅하고, 수동 프로모션을 기다린 다음, 전체 트래픽을 새 애플리케이션 버전으로 라우팅할 때까지 여러 번의 자동 프로모션을 수행합니다.
+그런 다음 롤아웃은 트래픽의 20%를 애플리케이션의 신규 버전인 카나리아 버전으로 라우팅하고, 수동 프로모션(승격)을 기다린 다음, 전체 트래픽을 새로운 카나리아 버전으로 라우팅할 때까지 여러 번의 자동 프로모션을 수행합니다.
 
 NOTE: argocd cli를 실행하여 수동 프로모션을 진행합니다.
 
@@ -60,8 +60,8 @@ spec:
 <2> 롤아웃 단계를 지정합니다. 이 예에서는 트래픽의 20%, 40%, 60%, 80%를 카나리아 버전으로 점진적으로 라우팅합니다.
 <3> 카나리아 버전으로 유도해야 하는 트래픽의 백분율입니다. 값 20은 트래픽의 20%가 카나리아 버전으로 유도됨을 의미합니다.
 <4> Argo Rollouts 컨트롤러가 승격(promote) 요청을 받을 때까지 20% 상태로 계속 유지합니다.
-<5> Argo Rollouts 컨트롤러에 45초 동안 해당 가중치를 유지하라고 지정합니다. 기간 값은 초( s), 분( m) 또는 시간( h)으로 설정할 수 있습니다. 예를 들어, 1시간 *1h* 동안 지정할 수 있습니다. 값을 지정하지 않으면 기간 값은 기본적으로 초 단위로 설정됩니다.
-<6> 생성할 Pod를 지정합니다.
+<5> Argo Rollouts 컨트롤러에 45초 동안 해당 가중치를 유지하라고 지정합니다. 기간 값은 초( s), 분( m) 또는 시간( h)으로 설정할 수 있습니다. 예를 들어, 1시간은 *1h* 으로 지정할 수 있습니다. 값을 지정하지 않으면 기본적으로 초 단위로 설정됩니다.
+<6> 생성할 Pod를 명시합니다.
 
 === 롤아웃 배포
 
@@ -194,20 +194,20 @@ oc argo rollouts get rollout rollouts-demo --watch -n  argocd-%userid%
 
 image::rollout-3.png[rollout]
 
-우리가 배포한 샘플 애플리케이션은 Argo Rollouts위 이해를 돕기 위한 웹 화면을 제공합니다.
+우리가 배포한 샘플 애플리케이션은 *Argo Rollouts* 에 대한 이해를 돕기 위한 웹 화면을 제공합니다.
 
 OpenShift 콘솔의 운영자 메뉴에서 Networking → Routes 를 클릭하고 `rollout` Route의 웹 주소를 클릭합니다.
 
 image::rollout-6.png[rollout]
 
-애플리케이션의 컨테이너 이미지 태그인 `blue` 색상으로, 사용자 요청이 들어오는 모습을 표시해주는 웹 서비스 화면이 보입니다.
+애플리케이션의 컨테이너 이미지 태그인 `blue` 색상으로, 사용자 요청을 처리하는 모습을 표현하는 웹 화면 입니다.
 
 image::rollout-7.png[rollout]
 
 [#rollouts_update]
 == 롤아웃 업데이트
 
-*Rollout*에 명시된 컨테이너 이미지 버전을 수정하여 롤아웃을 업데이트 할 수 있습니다.
+*Rollout* 에 명시된 컨테이너 이미지 버전을 수정하여 롤아웃을 업데이트 할 수 있습니다.
 롤아웃에 배포된 컨테이너 이미지를 수정하여 애플리케이션의 새로운 카나리아 버전을 시뮬레이션합니다.
 
 OpenShift 콘솔의 운영자 메뉴에서 Operators → Installed Operators → Red Hat OpenShift GitOps 를 클릭합니다.
@@ -223,11 +223,11 @@ image::rollout-1.png[rollout]
 
 image::rollout-4.png[rollout]
 
-YAML 메뉴를 선택하고, 컨테이너 이미지의 태그를 `blue`에서 `yellow`로 변경합니다.
+YAML 메뉴를 선택하고, 컨테이너 이미지의 태그를 `blue` 에서 `yellow` 로 변경합니다.
 
 image::rollout-5.png[rollout]
 
-이미지 태그를 수정하면 롤아웃 업데이트가 진행되며, 이전 단계에서 실행해두었던 롤아웃의 진행상황을 확인하는 터미널에서 새로운 revision이 생성되었습니다.
+이미지 태그를 수정하면 롤아웃 업데이트가 진행되며, 이전 단계에서 롤아웃의 진행상황을 확인하는 터미널에서 새로운 revision이 생성된 것이 보입니다.
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -237,7 +237,7 @@ oc argo rollouts get rollout rollouts-demo --watch -n  argocd-%userid%
 
 image::rollout-8.png[rollout]
 
-우리가 생성했던 롤아웃의 전략은 카나리아 버전으로 초기에 20%의 트래픽을 보내면서 프로모션(승격) 요청이 올 때까지 롤아웃이 무기한 멈추는 것이었습니다.
+우리가 생성했던 롤아웃은 카나리아 버전으로 초기에 20%의 트래픽을 보내면서 프로모션(승격) 요청이 올 때까지 롤아웃이 무기한 멈추어 기다리는 것이었습니다.
 
 ----
   strategy:
@@ -245,8 +245,6 @@ image::rollout-8.png[rollout]
       steps: 
       - setWeight: 20 
       - pause: {}  
-      - setWeight: 40
-      - pause: {duration: 45}  
 ----
 
 이 상황에서 우리는 롤아웃을 프로모션(승격)할 수도 있고, 중단(롤백)할 수도 있습니다.
@@ -255,7 +253,7 @@ image::rollout-8.png[rollout]
 [#rollouts_promote]
 == 롤아웃 프로모션
 
-롤아웃이 일시 중지 상태이므로 운영자는 이제 롤아웃을 수동으로 승격시켜 다음 단계로 진행해야 합니다.
+롤아웃이 일시 중지 상태이므로 이제 우리는 롤아웃을 수동으로 승격시켜 다음 단계로 진행해야 합니다.
 
 새로운 CMD 터미널 창에서 아래 명령어를 수행하여 카나리아 버전 애플리케이션에 대한 프로모션을 요청(승인)합니다.
 
@@ -273,7 +271,7 @@ oc argo rollouts promote rollouts-demo -n argocd-%userid%
 rollout 'rollouts-demo' promoted
 ----
 
-기존에 실행했던 롤아웃 상태를 확인했던 터미널을 확인해보면, 카나리아 버전에서 트래픽 가중치가 40%로 증가합니다. 지정된 시간이 지나면서 트래픽 가중치가 점차 이동합니다.
+기존에 실행했던 롤아웃 상태를 확인하는 터미널을 확인해보면, 카나리아 버전에서 트래픽 가중치가 40%로 증가합니다. 지정된 시간이 지나면서 트래픽 가중치가 점차 이동합니다.
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -283,7 +281,7 @@ oc argo rollouts get rollout rollouts-demo --watch -n  argocd-%userid%
 
 image::rollout-9.png[rollout]
 
-애플리케이션의 서비스 화면도 `yellow`가 점차 늘어나는 것을 볼 수 있습니다.
+애플리케이션의 서비스 화면도 `yellow` 가 점차 늘어나는 것을 볼 수 있습니다.
 
 image::rollout-10.png[rollout]
 
@@ -299,7 +297,7 @@ image::rollout-10.png[rollout]
 
 이 단계에서는 애플리케이션의 새로운 카나리아 버전인 `red` 이미지 태그를 배포한 다음, 안정적으로 완전히 프로모션되기 전에 이를 중단합니다.
 
-다음 명령을 수행하여 컨테이너 이미지 태그를 수정하여 롤아웃 업데이트를 진행시킵니다.
+다음 명령을 통해 컨테이너 이미지 태그를 `red` 로 수정하여 롤아웃 업데이트를 진행시킵니다.
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -341,7 +339,7 @@ oc argo rollouts abort rollouts-demo -n argocd-%userid%
 rollout 'rollouts-demo' aborted
 ----
 
-롤아웃의 상태를 확인해보면, 새로운 revision이 `ScaledDown` 상태로 변했고, 롤아웃의 상태가 `Degraded`인 것이 확인됩니다. 롤아웃이 중단되었습니다.
+롤아웃의 상태를 확인해보면, 새로운 revision이 `ScaledDown` 상태로 변했고, 롤아웃의 상태가 `Degraded` 인 것이 확인됩니다. 롤아웃이 중단되었습니다.
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -351,7 +349,7 @@ oc argo rollouts get rollout rollouts-demo --watch -n  argocd-%userid%
 
 image::rollout-12.png[rollout]
 
-애플리케이션의 서비스 화면도 `red`가 잠시 생겼다가 사라진 것이 확인됩니다.
+애플리케이션의 서비스 화면도 `red` 가 잠시 생겼다가 사라진 것이 확인됩니다.
 
 [NOTE]
 ====
@@ -376,7 +374,7 @@ oc argo rollouts set image rollouts-demo rollouts-demo=argoproj/rollouts-demo:ye
 rollout "rollouts-demo" image updated
 ----
 
-롤아웃의 상태를 확인하는 터미널을 보면, 새로운 revision이 즉시 만들어지면서 롤아웃의 상태가 `Healthy`로 바로 변경되었습니다.
+롤아웃의 상태를 확인하는 터미널을 보면, 새로운 revision이 즉시 만들어지면서 롤아웃의 상태가 `Healthy` 로 바로 변경되었습니다.
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]

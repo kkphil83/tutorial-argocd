@@ -12,7 +12,7 @@ Project를 retail-%userid% 로 선택하면, argocd-server 경로로 들어갈 �
 
 [NOTE]
 ====
-환경 설명: retail-%userid% 프로젝트에 Argo CD 서버가 설치되어 있습니다. 이를 톻애 argocd-%userid% 프로젝트에 샘플 애플리케이션을 배포할 것입니다.
+환경 설명: retail-%userid% 프로젝트에 Argo CD 서버가 설치되어 있습니다. 이를 통해 argocd-%userid% 프로젝트에 샘플 애플리케이션을 배포할 것입니다.
 ====
 
 image::argopad.png[ArgoCD]
@@ -158,11 +158,14 @@ image::app5.png[SampleApp]
 
 image::argocd-app2.png[SampleApp]
 
-이 시점에서 애플리케이션은 가동되고 실행 중이어야 합니다. 리소스가 생성되었는지 확인합니다.
+이 시점에서 애플리케이션은 가동되고 실행 중이어야 합니다. CMD 터미널 창에서 wsl 환경으로 들어가서 `oc login` 으로 접속하고 리소스가 생성되었는지 확인합니다.
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 ----
+wsl
+oc login -u %userid% -p openshift https://api.cluster-vgrd5.vgrd5.sandbox557.opentlc.com:6443
+
 oc get all -n argocd-%userid%
 ----
 
@@ -191,7 +194,7 @@ oc rollout status deploy/bgd -n argocd-%userid%
 
 웹 브라우저에서 애플리케이션을 방문하세요.
 
-OpenShift 콘솔의 개발자 화면에서, `Topology` 메뉴로 들어가서 방금 동기화한 애플리케이션의 웹 주소로 들어갈 수 있습니다. (각자 계정의 argocd-* 프로젝트를 선택하세요!)
+OpenShift 콘솔의 개발자 화면에서, `Topology` 메뉴로 들어가서 방금 동기화한 애플리케이션의 웹 주소로 들어갈 수 있습니다. (각 계정의 argocd-%userid% 프로젝트를 선택하세요!)
 
 image::bgdapp.png[BGD App]
 
@@ -202,7 +205,7 @@ image::bgd.png[SampleApp]
 === 구성 드리프트 해결
 
 애플리케이션 환경에 변화를 도입해 보겠습니다! 
-실행 중인 Deployment 매니페스트를 패치하여 애플리케이션의 버블 색상을 파란색에서 녹색으로 변경합니다.
+실행 중인 `Deployment` 매니페스트를 패치하여 애플리케이션의 버블 색상을 파란색에서 녹색으로 변경합니다.
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
@@ -239,7 +242,7 @@ Argo CD 웹 UI를 통해 앱을 동기화하는 방법은 다음과 같습니다
 argocd app sync bgd-app
 ----
 
-동기화 프로세스가 완료되면 Argo CD UI에서 애플리케이션이 동기화되었다고 표시됩니다.
+동기화 프로세스가 완료되면 Argo CD 웹 UI에서 애플리케이션이 동기화되었다고 표시됩니다.
 
 image::fullysynced.png[Fully Synced]
 
@@ -247,7 +250,7 @@ image::fullysynced.png[Fully Synced]
 
 image::bgd.png[BDG App]
 
-`Application` 매니페스트를 수정하여 구성 드리프트를 자동으로 고치도록 구성할 수 있습니다. 가장 아래쪽의 `selfHeal` 기능을 true로 변경하는 것입니다.
+`Application` 매니페스트를 수정하여 구성 드리프트를 자동으로 고치도록 구성할 수도 있습니다. 가장 아래쪽의 `selfHeal` 기능을 true로 변경하는 것입니다.
 
 [.console-input]
 [source,yaml,subs="attributes+,+macros"]
