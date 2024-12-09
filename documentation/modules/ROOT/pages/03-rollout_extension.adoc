@@ -41,7 +41,7 @@ spec:
       - pause: {duration: 20}
       - setWeight: 80
       - pause: {duration: 10}
-  *workloadRef:*
+  workloadRef:
     apiVersion: apps/v1
     kind: Deployment
     name: rollout-extension
