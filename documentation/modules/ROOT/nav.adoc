@@ -1,4 +1,5 @@
 * xref:01-getting_started.adoc[Argo CD]
+** xref:01-getting_started.adoc#argocd_cli[Argo CD CLI 구성]
 ** xref:01-getting_started.adoc#connect_argocd[Argo CD 웹 UI 접속]
 ** xref:01-getting_started.adoc#deploy_sample_application[샘플 애플리케이션 배포]
 

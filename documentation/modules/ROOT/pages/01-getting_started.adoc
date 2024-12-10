@@ -4,6 +4,52 @@ include::_attributes.adoc[]
 
 Argo CD에 접근하여 관리하는 방법을 알아보겠습니다.
 
+[#argocd_cli]
+== Argo CD CLI 구성
+
+OpenShift 웹 터미널에서 Argo CD 명령어를 구성합니다.
+
+== CLI 터미널
+
+OpenShift 웹콘솔의 오른쪽 상단의 웹 터미널 아이콘을 클릭하여 CLI 터미널 창을 엽니다. 그 다음 '시작’버튼을 눌러 터미널을 활성화 합니다.
+
+image::webt-1.png[SampleApp]
+
+image::webt-2.png[SampleApp]
+
+[IMPORTANT]
+====
+앞으로 명령어를 입력(복사/붙여넣기)하여 진행되는 실습은 해당 터미널 창을 이용하여 수행합니다.
+====
+
+== argocd CLI 설치
+
+OpenShift 웹 터미널에서 아래 명령어를 수행하여 Argo CD CLI를 설치합니다.
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+curl -LO  https://developers.redhat.com/content-gateway/file/pub/openshift-v4/clients/openshift-gitops/1.14.0-116/argocd-linux-amd64
+chmod +x ./argocd-linux-amd64
+mv ./argocd-linux-amd64 /wto/bin/argocd
+argocd version
+----
+
+== Argo Rollouts CLI 플러그인 설치
+
+OpenShift 웹 터미널에서 아래 명령어를 수행하여 Argo Rollouts CLI 플러그인을 설치합니다.
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+curl -LO  https://github.com/argoproj/argo-rollouts/releases/latest/download/kubectl-argo-rollouts-linux-amd64
+chmod +x ./kubectl-argo-rollouts-linux-amd64
+mv ./kubectl-argo-rollouts-linux-amd64 /wto/bin/kubectl-argo-rollouts
+oc argo rollouts version
+----
+
+
+
 [#connect_argocd]
 == Argo CD 웹 UI 접속
 
