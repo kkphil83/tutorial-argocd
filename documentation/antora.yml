@@ -1,5 +1,5 @@
 name: argocd-tutorial
-title: Module 4 - Argo CD
+title: Module 3 - Argo CD
 version: main
 nav:
   - modules/ROOT/nav.adoc
