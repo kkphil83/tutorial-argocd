@@ -12,7 +12,7 @@ image::re-0.png[rollout-extension]
 
 === 롤아웃 매니페스트 YAML 검토
 
-이전 과정에서는 롤아웃의 기본 개념을 실습하기 위해 `Rollout` 이 `ReplicaSet` 을 제어하였습니다. *Rollout Extension* 을 실습하기 위해 이번에는 `Deployment`가 포함된 `Application` 을 배포합니다. 그 안에 포함된 `Rollout` 이  'Deployment' 를 참조하여 워크로드의 배포 전략을 제어합니다.
+이전 과정에서는 롤아웃의 기본 개념을 실습하기 위해 `Rollout` 이 `ReplicaSet` 을 제어하였습니다. *Rollout Extension* 을 실습하기 위해 이번에는 `Deployment` 가 포함된 `Application` 을 배포합니다. 그 안에 포함된 `Rollout` 이  'Deployment' 를 참조하여 워크로드의 배포 전략을 제어합니다.
 
 `Rollout` 에서 `Deployment` 를 참조하기 위해 아래의 샘플 YAML처럼 `Rollout` 이 참조할 워크로드를 `workloadRef` 항목에 명시합니다.
 ----
