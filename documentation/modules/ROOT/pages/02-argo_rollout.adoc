@@ -78,7 +78,8 @@ image::rollout-1.png[rollout]
 
 image::rollout-2.png[rollout]
 
-`YAML보기`를 선택하여 Yaml 편집기에 아래의 내용을 붙여 넣고 하단의 `Create` (만들기) 버튼을 눌러서 롤아웃 개체를 생성합니다.
+
+`YAML보기` 를 선택하여 Yaml 편집기에 아래의 내용을 붙여 넣고 하단의 `Create` (만들기) 버튼을 눌러서 롤아웃 개체를 생성합니다.
 
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
